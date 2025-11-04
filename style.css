@@ -7,7 +7,7 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow-x: hidden;
-    background: rgba(0, 0, 0, 0.7);
+    background: #000;
     color: #fff;
 }
 
@@ -183,6 +183,7 @@ nav.scrolled {
 
 .dimensions {
     padding: 5rem 2rem;
+    background: linear-gradient(180deg, #000 0%, #0a0a1e 100%);
 }
 
 .section-title {
@@ -274,6 +275,7 @@ nav.scrolled {
 
 .multiverse {
     padding: 5rem 2rem;
+    background: #000;
     position: relative;
 }
 
@@ -339,6 +341,7 @@ nav.scrolled {
 
 .interactive-lab {
     padding: 5rem 2rem;
+    background: linear-gradient(180deg, #000 0%, #1a1a3e 50%, #000 100%);
 }
 
 .lab-controls {
@@ -405,10 +408,11 @@ input[type="range"]::-webkit-slider-thumb {
     border-radius: 10px;
     transition: all 0.5s ease;
     box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
-    position: relative;
+    position: relative; /* ensure canvas can be absolutely positioned */
     overflow: hidden;
 }
 
+/* noise canvas covers the visual and uses blend mode for nicer integration */
 .dimension-visual canvas#noise-canvas {
     position: absolute;
     inset: 0;
@@ -420,22 +424,59 @@ input[type="range"]::-webkit-slider-thumb {
     mix-blend-mode: overlay;
 }
 
-canvas#noise-canvas-global {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 0;
-    pointer-events: none;
-    mix-blend-mode: overlay;
-    opacity: 0.72;
-    display: block;
+/* --- new: overlay text for the visual --- */
+.visual-overlay {
+    position: absolute;
+    z-index: 3;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    background: linear-gradient(180deg, rgba(10,10,20,0.55), rgba(20,10,40,0.25));
+    border-radius: 12px;
+    padding: 10px 12px;
+    color: #e8f0ff;
+    text-align: center;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    transition: opacity 220ms ease;
+    font-size: 0.9rem;
+    opacity: 0.98;
 }
 
-.above-noise {
-    position: relative;
-    z-index: 1;
+.visual-title {
+    margin: 0 0 6px 0;
+    font-size: 1rem;
+    color: #bfcfff;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+}
+
+.visual-desc {
+    margin: 0 0 8px 0;
+    font-size: 0.82rem;
+    color: rgba(235,240,255,0.9);
+    line-height: 1.1;
+}
+
+.visual-stats {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: #dbe9ff;
+    margin-top: 6px;
+}
+
+.visual-stats .sep {
+    opacity: 0.6;
+    margin: 0 4px;
+}
+
+/* responsive tweaks for smaller screens */
+@media (max-width: 480px) {
+    .dimension-visual { width: 160px; height: 160px; }
+    .visual-overlay { left: 8px; right: 8px; bottom: 8px; padding: 8px; }
+    .visual-desc { display: none; } /* save space on tiny screens */
 }
 
 .time-dimension {

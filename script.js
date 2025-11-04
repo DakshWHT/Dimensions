@@ -144,24 +144,24 @@ $(document).ready(function () {
     
     function ensureNoiseCanvas() {
         if (!noiseCanvas) {
-            noiseCanvas = $('<canvas id="noise-canvas-global"></canvas>');
-            $('body').append(noiseCanvas);
+            noiseCanvas = $('<canvas id="noise-canvas"></canvas>');
+            $('#dimension-visual').append(noiseCanvas);
             noiseCtx = noiseCanvas[0].getContext('2d');
             resizeNoiseCanvas();
             $(window).on('resize', resizeNoiseCanvas);
-            $('body').children().not(noiseCanvas).addClass('above-noise');
             startNoiseAnimation();
         }
     }
 
     function resizeNoiseCanvas() {
         if (!noiseCanvas) return;
+        const rect = $('#dimension-visual')[0].getBoundingClientRect();
         const dpr = window.devicePixelRatio || 1;
-        noiseW = Math.max(1, Math.floor(window.innerWidth));
-        noiseH = Math.max(1, Math.floor(window.innerHeight));
+        noiseW = Math.max(1, Math.floor(rect.width));
+        noiseH = Math.max(1, Math.floor(rect.height));
         noiseCanvas[0].width = noiseW * dpr;
         noiseCanvas[0].height = noiseH * dpr;
-        noiseCanvas.css({ width: noiseW + 'px', height: noiseH + 'px' });
+        noiseCanvas.css({ width: rect.width + 'px', height: rect.height + 'px' });
         noiseCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
@@ -210,7 +210,7 @@ $(document).ready(function () {
                 const v1 = noise2D(nx + t * speed, ny + t * speed, gw, gh);
                 const v2 = 0.5 * noise2D(nx * 2 + t * speed * 1.7, ny * 2 + t * speed * 1.7, gw * 2, gh * 2);
                 const v = Math.max(0, Math.min(1, (v1 + v2) * 0.75 * amplitude + 0.25 * amplitude));
-                const alpha = Math.floor(220 * v * Math.min(1, 0.6 + amplitude) + 30);
+                const alpha = Math.floor(180 * v);
                 const hue = (baseHue + v * 40) % 360;
                 const c = 1;
                 const h = hue / 60;
@@ -222,7 +222,7 @@ $(document).ready(function () {
                 else if (h < 4) { r1 = 0; g1 = xcol; b1 = c; }
                 else if (h < 5) { r1 = xcol; g1 = 0; b1 = c; }
                 else { r1 = c; g1 = 0; b1 = xcol; }
-                const light = 0.7;
+                const light = 0.55;
                 const r = Math.floor((r1 * light + (1 - light) * 0.15) * 255);
                 const g = Math.floor((g1 * light + (1 - light) * 0.15) * 255);
                 const b = Math.floor((b1 * light + (1 - light) * 0.15) * 255);
