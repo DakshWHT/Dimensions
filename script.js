@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
     $('.menu-toggle').click(function () {
         $('.nav-links').toggleClass('active');
@@ -132,10 +131,150 @@ $(document).ready(function () {
         updateDimensionVisual();
     });
 
+    let noiseCanvas, noiseCtx, noiseW, noiseH;
+    let noiseTime = 0;
+    let noiseReq;
+
+    // shared noise params driven by sliders
+    let noiseParams = {
+        amplitude: 0.5,
+        scale: 3.0,
+        speed: 0.3,
+        hueShift: 0
+    };
+    
+    function ensureNoiseCanvas() {
+        if (!noiseCanvas) {
+            noiseCanvas = $('<canvas id="noise-canvas"></canvas>');
+            $('#dimension-visual').append(noiseCanvas);
+            noiseCtx = noiseCanvas[0].getContext('2d');
+            resizeNoiseCanvas();
+            $(window).on('resize', resizeNoiseCanvas);
+            startNoiseAnimation();
+        }
+    }
+
+    function resizeNoiseCanvas() {
+        if (!noiseCanvas) return;
+        const rect = $('#dimension-visual')[0].getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        noiseW = Math.max(1, Math.floor(rect.width));
+        noiseH = Math.max(1, Math.floor(rect.height));
+        noiseCanvas[0].width = noiseW * dpr;
+        noiseCanvas[0].height = noiseH * dpr;
+        noiseCanvas.css({ width: rect.width + 'px', height: rect.height + 'px' });
+        noiseCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    // simple value-noise (Perlin-ish) implementation
+    const noiseGridCache = {};
+    function makeGrid(gw, gh) {
+        const key = gw + 'x' + gh;
+        if (noiseGridCache[key]) return noiseGridCache[key];
+        const grid = new Float32Array((gw + 1) * (gh + 1));
+        for (let i = 0; i < grid.length; i++) grid[i] = Math.random();
+        noiseGridCache[key] = { gw, gh, grid };
+        return noiseGridCache[key];
+    }
+
+    function smoothstep(t) { return t * t * (3 - 2 * t); }
+    function noise2D(x, y, gw, gh) {
+        // x,y in grid coordinates (continuous), grid size gw x gh
+        const gx = Math.floor(x);
+        const gy = Math.floor(y);
+        const fx = x - gx;
+        const fy = y - gy;
+        const g = makeGrid(gw, gh).grid;
+        const idx = (ix, iy) => (iy % (gh + 1)) * (gw + 1) + (ix % (gw + 1));
+        const v00 = g[idx(gx, gy)];
+        const v10 = g[idx(gx + 1, gy)];
+        const v01 = g[idx(gx, gy + 1)];
+        const v11 = g[idx(gx + 1, gy + 1)];
+        const sx = smoothstep(fx);
+        const sy = smoothstep(fy);
+        const ix0 = v00 + (v10 - v00) * sx;
+        const ix1 = v01 + (v11 - v01) * sx;
+        return ix0 + (ix1 - ix0) * sy;
+    }
+
+    function drawNoise(amplitude = 0.5, scale = 3.0, speed = 0.3, hueShift = 0) {
+        if (!noiseCtx || !noiseCanvas) return;
+        const img = noiseCtx.createImageData(noiseW, noiseH);
+        const gw = Math.max(2, Math.floor(noiseW / (50 / scale)));
+        const gh = Math.max(2, Math.floor(noiseH / (50 / scale)));
+        const t = noiseTime;
+        const baseHue = hueShift % 360;
+
+        // sample at a reduced step for perf
+        const step = 2;
+        for (let y = 0; y < noiseH; y += step) {
+            for (let x = 0; x < noiseW; x += step) {
+                const nx = (x / noiseW) * gw;
+                const ny = (y / noiseH) * gh;
+                // combine two octaves for richer look
+                const v1 = noise2D(nx + t * speed, ny + t * speed, gw, gh);
+                const v2 = 0.5 * noise2D(nx * 2 + t * speed * 1.7, ny * 2 + t * speed * 1.7, gw * 2, gh * 2);
+                const v = Math.max(0, Math.min(1, (v1 + v2) * 0.75 * amplitude + 0.25 * amplitude));
+                const alpha = Math.floor(180 * v); // semi-transparent
+                // color via HSL -> RGBA (approx)
+                const hue = (baseHue + v * 40) % 360;
+                // convert HSL to RGB (fast approximation)
+                const c = 1; // we use saturation=1 lightness ~ 0.5
+                const h = hue / 60;
+                const xcol = c * (1 - Math.abs((h % 2) - 1));
+                let r1 = 0, g1 = 0, b1 = 0;
+                if (h >= 0 && h < 1) { r1 = c; g1 = xcol; b1 = 0; }
+                else if (h < 2) { r1 = xcol; g1 = c; b1 = 0; }
+                else if (h < 3) { r1 = 0; g1 = c; b1 = xcol; }
+                else if (h < 4) { r1 = 0; g1 = xcol; b1 = c; }
+                else if (h < 5) { r1 = xcol; g1 = 0; b1 = c; }
+                else { r1 = c; g1 = 0; b1 = xcol; }
+                // lightness approx
+                const light = 0.55;
+                const r = Math.floor((r1 * light + (1 - light) * 0.15) * 255);
+                const g = Math.floor((g1 * light + (1 - light) * 0.15) * 255);
+                const b = Math.floor((b1 * light + (1 - light) * 0.15) * 255);
+
+                // write a block of step x step pixels
+                for (let yy = 0; yy < step; yy++) {
+                    for (let xx = 0; xx < step; xx++) {
+                        const px = x + xx;
+                        const py = y + yy;
+                        if (px >= noiseW || py >= noiseH) continue;
+                        const idx = (py * noiseW + px) * 4;
+                        img.data[idx] = r;
+                        img.data[idx + 1] = g;
+                        img.data[idx + 2] = b;
+                        img.data[idx + 3] = alpha;
+                    }
+                }
+            }
+        }
+        noiseCtx.clearRect(0, 0, noiseW, noiseH);
+        noiseCtx.putImageData(img, 0, 0);
+    }
+
+    function startNoiseAnimation() {
+        if (noiseReq) cancelAnimationFrame(noiseReq);
+        function frame() {
+            // advance time (frame-based)
+            noiseTime += 0.016 * (0.8 + noiseParams.speed * 0.8); // speed influences time progression subtly
+            // use the shared noiseParams object
+            drawNoise(noiseParams.amplitude, noiseParams.scale, noiseParams.speed, noiseParams.hueShift);
+            noiseReq = requestAnimationFrame(frame);
+        }
+        noiseReq = requestAnimationFrame(frame);
+    }
+    
+    // ensure canvas is present when lab section is initialized and sync initial params
+    ensureNoiseCanvas();
+    updateDimensionVisual();
+    // --- END: Perlin-like noise canvas for #dimension-visual ---
+
     function updateDimensionVisual() {
-        const spatial = $('#spatial-slider').val();
-        const time = $('#time-slider').val();
-        const quantum = $('#quantum-slider').val();
+        const spatial = parseFloat($('#spatial-slider').val());
+        const time = parseFloat($('#time-slider').val());
+        const quantum = parseFloat($('#quantum-slider').val());
 
         const rotation = (spatial / 100) * 360;
         const scale = 0.5 + (time / 100) * 1;
@@ -146,6 +285,28 @@ $(document).ready(function () {
             'filter': `hue-rotate(${hue}deg)`,
             'border-radius': `${50 - (quantum / 2)}%`
         });
+
+        // map sliders to noise parameters:
+        // - quantum -> amplitude (+small effect on scale)
+        // - spatial -> speed and noise scale (finer/coarser detail)
+        // - time -> hueShift for colored noise
+        noiseParams.amplitude = (quantum / 100);
+        noiseParams.speed = (spatial / 100) * 1.6;
+        noiseParams.scale = 2.0 + (spatial / 100) * 4.0 + (quantum / 100) * 1.5; // make scale responsive
+        noiseParams.hueShift = (time / 100) * 360;
+
+        // update overlay text (live stats)
+        $('#visual-spatial').text(`Spatial: ${Math.round(spatial)}%`);
+        $('#visual-time').text(`Time: ${Math.round(time)}%`);
+        $('#visual-quantum').text(`Quantum: ${Math.round(quantum)}%`);
+
+        // small visual pulse for feedback
+        $('.visual-overlay').stop(true,true).css('opacity', 0.7).animate({opacity: 0.98}, 250);
+
+        // ensure canvas exists and draw once for immediate feedback
+        ensureNoiseCanvas();
+        noiseTime += 0.002;
+        drawNoise(noiseParams.amplitude, noiseParams.scale, noiseParams.speed, noiseParams.hueShift);
     }
 
     $('#reset-lab').click(function () {
