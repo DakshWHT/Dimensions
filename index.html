@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIMENSION - Explore Beyond Reality</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            background: #000;
+            color: #fff;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(10, 10, 30, 0.95);
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1a1a3e 0%, #000 100%);
+        }
+
+        .dimension-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(102, 126, 234, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(102, 126, 234, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            transform: perspective(500px) rotateX(60deg);
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero p {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.3s backwards;
+        }
+
+        .cta-button {
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease 0.6s backwards;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dimensions {
+            padding: 5rem 2rem;
+            background: linear-gradient(180deg, #000 0%, #0a0a1e 100%);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dimension-cards {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .dimension-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.5s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dimension-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .dimension-card:hover::before {
+            opacity: 1;
+        }
+
+        .dimension-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .dimension-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .dimension-card p {
+            line-height: 1.6;
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .explore-btn {
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 30px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .explore-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .multiverse {
+            padding: 5rem 2rem;
+            background: #000;
+            position: relative;
+        }
+
+        .universe-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .universe {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .universe:nth-child(1) { background: radial-gradient(circle, #667eea, #1a1a3e); }
+        .universe:nth-child(2) { background: radial-gradient(circle, #f093fb, #3a1a5e); }
+        .universe:nth-child(3) { background: radial-gradient(circle, #4facfe, #1a3a5e); }
+        .universe:nth-child(4) { background: radial-gradient(circle, #43e97b, #1a5e3a); }
+
+        .universe:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 60px rgba(102, 126, 234, 0.8);
+        }
+
+        .universe-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+            padding: 1rem;
+        }
+
+        .universe-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .universe-content p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .interactive-lab {
+            padding: 5rem 2rem;
+            background: linear-gradient(180deg, #000 0%, #1a1a3e 50%, #000 100%);
+        }
+
+        .lab-controls {
+            max-width: 800px;
+            margin: 3rem auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .control-group {
+            margin-bottom: 2rem;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            color: #667eea;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 8px;
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.8);
+        }
+
+        .dimension-display {
+            min-height: 300px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dimension-visual {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: all 0.5s ease;
+            box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
+        }
+        .time-dimension {
+            padding: 5rem 2rem;
+            background: linear-gradient(180deg, #000 0%, #1a1a3e 100%);
+        }
+
+        .timeline-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            transform: translateX(-50%);
+        }
+
+        .timeline-event {
+            margin-bottom: 3rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .timeline-event:nth-child(odd) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            width: 45%;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-dot:hover {
+            transform: translateX(-50%) scale(1.3);
+            box-shadow: 0 0 30px rgba(102, 126, 234, 1);
+        }
+
+        .portal-section {
+            padding: 5rem 2rem;
+            background: #000;
+            text-align: center;
+        }
+
+        .portal {
+            width: 300px;
+            height: 300px;
+            margin: 3rem auto;
+            border-radius: 50%;
+            background: radial-gradient(circle, transparent 30%, #667eea 100%);
+            position: relative;
+            animation: portalPulse 3s ease-in-out infinite;
+            cursor: pointer;
+            box-shadow: 0 0 100px rgba(102, 126, 234, 0.6);
+        }
+
+        @keyframes portalPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .portal-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            animation: portalRingExpand 2s ease-out infinite;
+        }
+
+        .portal-ring:nth-child(1) {
+            width: 80%;
+            height: 80%;
+            animation-delay: 0s;
+        }
+
+        .portal-ring:nth-child(2) {
+            width: 90%;
+            height: 90%;
+            animation-delay: 0.5s;
+        }
+
+        .portal-ring:nth-child(3) {
+            width: 100%;
+            height: 100%;
+            animation-delay: 1s;
+        }
+
+        @keyframes portalRingExpand {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .portal-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .dimension-calculator {
+            padding: 5rem 2rem;
+            background: linear-gradient(180deg, #000 0%, #0a0a1e 100%);
+        }
+
+        .calculator-container {
+            max-width: 600px;
+            margin: 3rem auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .calc-input {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .calc-button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .calc-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .calc-result {
+            padding: 2rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            margin-top: 2rem;
+            min-height: 100px;
+            display: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a3e, #0a0a1e);
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            border: 2px solid rgba(102, 126, 234, 0.5);
+            box-shadow: 0 0 50px rgba(102, 126, 234, 0.5);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            transform: rotate(90deg);
+            color: #f093fb;
+        }
+
+        footer {
+            padding: 3rem 2rem;
+            background: #0a0a1e;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.7;
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #764ba2;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                flex-direction: column;
+                background: rgba(10, 10, 30, 0.98);
+                width: 100%;
+                padding: 2rem;
+                transition: left 0.3s ease;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .universe {
+                width: 150px;
+                height: 150px;
+            }
+
+            .timeline-line {
+                left: 20px;
+            }
+
+            .timeline-event {
+                flex-direction: row !important;
+            }
+
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 40px;
+            }
+
+            .portal {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dimension-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .universe {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">DIMENSION</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#dimensions">Dimensions</a></li>
+                <li><a href="#multiverse">Multiverse</a></li>
+                <li><a href="#lab">Lab</a></li>
+                <li><a href="#time">Time</a></li>
+                <li><a href="#portal">Portal</a></li>
+                <li><a href="#calculator">Calculator</a></li>
+            </ul>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <div class="dimension-grid"></div>
+        </div>
+        <div class="hero-content">
+            <h1>DIMENSION</h1>
+            <p>Explore Worlds Beyond Reality</p>
+            <button class="cta-button">Enter the Multiverse</button>
+        </div>
+    </section>
+
+    <section id="dimensions" class="dimensions">
+        <h2 class="section-title">Explore the Dimensions</h2>
+        <div class="dimension-cards">
+            <div class="dimension-card" data-dimension="spatial">
+                <span class="card-icon">🌌</span>
+                <h3>Spatial Dimension</h3>
+                <p>Navigate through the three-dimensional space we inhabit, where length, width, and height define our physical reality. Discover how objects move and exist in this familiar yet complex realm.</p>
+                <button class="explore-btn">Explore Spatial Reality</button>
+            </div>
+            <div class="dimension-card" data-dimension="temporal">
+                <span class="card-icon">⏰</span>
+                <h3>Temporal Dimension</h3>
+                <p>Journey through the fourth dimension—time itself. Experience the flow of moments, the weight of history, and the infinite possibilities of the future converging in the eternal now.</p>
+                <button class="explore-btn">Travel Through Time</button>
+            </div>
+            <div class="dimension-card" data-dimension="quantum">
+                <span class="card-icon">🔮</span>
+                <h3>Quantum Dimension</h3>
+                <p>Dive into the bizarre world of quantum mechanics where particles exist in multiple states simultaneously, and observation itself changes reality. Here, the impossible becomes possible.</p>
+                <button class="explore-btn">Enter Quantum Realm</button>
+            </div>
+            <div class="dimension-card" data-dimension="consciousness">
+                <span class="card-icon">🧠</span>
+                <h3>Consciousness Dimension</h3>
+                <p>Explore the metaphysical realm of thought, perception, and awareness. This dimension exists beyond physical space, shaped by imagination, dreams, and the collective human experience.</p>
+                <button class="explore-btn">Expand Consciousness</button>
+            </div>
+            <div class="dimension-card" data-dimension="higher">
+                <span class="card-icon">🌀</span>
+                <h3>Higher Dimensions</h3>
+                <p>Venture into theoretical dimensions beyond our perception. String theory suggests up to 11 dimensions, folded and hidden from our three-dimensional view, holding the secrets of the universe.</p>
+                <button class="explore-btn">Access Higher Planes</button>
+            </div>
+            <div class="dimension-card" data-dimension="parallel">
+                <span class="card-icon">💫</span>
+                <h3>Parallel Dimension</h3>
+                <p>Discover alternate realities where every decision creates a new branch of existence. In these parallel universes, infinite versions of you live out every possible outcome.</p>
+                <button class="explore-btn">View Parallel Worlds</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="multiverse" class="multiverse">
+        <h2 class="section-title">The Multiverse</h2>
+        <p style="max-width: 800px; margin: 0 auto 3rem; text-align: center; font-size: 1.2rem; opacity: 0.8;">
+            Click on each universe to explore different realities and discover what lies beyond our own dimension.
+        </p>
+        <div class="universe-container">
+            <div class="universe" data-universe="alpha">
+                <div class="universe-content">
+                    <h3>Universe Alpha</h3>
+                    <p>The Mirror World</p>
+                </div>
+            </div>
+            <div class="universe" data-universe="beta">
+                <div class="universe-content">
+                    <h3>Universe Beta</h3>
+                    <p>The Dream Realm</p>
+                </div>
+            </div>
+            <div class="universe" data-universe="gamma">
+                <div class="universe-content">
+                    <h3>Universe Gamma</h3>
+                    <p>The Crystal Cosmos</p>
+                </div>
+            </div>
+            <div class="universe" data-universe="delta">
+                <div class="universe-content">
+                    <h3>Universe Delta</h3>
+                    <p>The Void Between</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="lab" class="interactive-lab">
+        <h2 class="section-title">Dimension Laboratory</h2>
+        <p style="max-width: 800px; margin: 0 auto 2rem; text-align: center; font-size: 1.2rem; opacity: 0.8;">
+            Manipulate the dimensions using these controls and observe how reality shifts and transforms.
+        </p>
+        <div class="lab-controls">
+            <div class="control-group">
+                <label>Spatial Distortion: <span id="spatial-value">50</span>%</label>
+                <div class="slider-container">
+                    <input type="range" id="spatial-slider" min="0" max="100" value="50">
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Time Dilation: <span id="time-value">50</span>%</label>
+                <div class="slider-container">
+                    <input type="range" id="time-slider" min="0" max="100" value="50">
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Quantum Probability: <span id="quantum-value">50</span>%</label>
+                <div class="slider-container">
+                    <input type="range" id="quantum-slider" min="0" max="100" value="50">
+                </div>
+            </div>
+            <button class="calc-button" id="reset-lab">Reset Dimensions</button>
+            <div class="dimension-display">
+                <div class="dimension-visual" id="dimension-visual"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="time" class="time-dimension">
+        <h2 class="section-title">Journey Through Time</h2>
+        <p style="max-width: 800px; margin: 0 auto 3rem; text-align: center; font-size: 1.2rem; opacity: 0.8;">
+            Click on the timeline markers to explore pivotal moments in dimensional history.
+        </p>
+        <div class="timeline-container">
+            <div class="timeline-line"></div>
+            <div class="timeline-event">
+                <div class="timeline-content">
+                    <h3>Present Reality</h3>
+                    <p>Today, we perceive three spatial dimensions and one temporal dimension. Yet scientists theorize that more dimensions exist, curled up at scales too small to detect.</p>
+                </div>
+                <div class="timeline-dot" data-era="present"></div>
+            </div>
+            <div class="timeline-event">
+                <div class="timeline-content">
+                    <h3>Future Possibilities</h3>
+                    <p>Tomorrow holds the key to understanding all dimensions. Advanced technology may one day allow us to perceive, access, and navigate dimensions beyond our current comprehension.</p>
+                </div>
+                <div class="timeline-dot" data-era="future"></div>
+            </div>
+        </div>
+    </section><section id="portal" class="portal-section">
+        <h2 class="section-title">The Dimensional Portal</h2>
+        <p style="max-width: 800px; margin: 0 auto; font-size: 1.2rem; opacity: 0.8;">
+            Step through the gateway between worlds. This portal connects all dimensions, 
+            allowing passage through space, time, and reality itself. Click to activate...
+        </p>
+        <div class="portal">
+            <div class="portal-ring"></div>
+            <div class="portal-ring"></div>
+            <div class="portal-ring"></div>
+            <div class="portal-text">ENTER</div>
+        </div>
+        <div style="margin-top: 2rem;">
+            <button class="calc-button" style="max-width: 300px; margin: 0 auto; display: block;" id="portal-activate">Activate Portal</button>
+        </div>
+    </section>
+
+    <section id="calculator" class="dimension-calculator">
+        <h2 class="section-title">Dimensional Travel Calculator</h2>
+        <p style="max-width: 800px; margin: 0 auto 2rem; text-align: center; font-size: 1.2rem; opacity: 0.8;">
+            Calculate the energy required to travel between dimensions and discover your dimensional coordinates.
+        </p>
+        <div class="calculator-container">
+            <div class="control-group">
+                <label>Your Current Mass (kg)</label>
+                <input type="number" class="calc-input" id="mass-input" placeholder="Enter your mass in kg" value="70">
+            </div>
+            <div class="control-group">
+                <label>Target Dimension</label>
+                <select class="calc-input" id="dimension-select">
+                    <option value="2">2D - Flatland</option>
+                    <option value="3" selected>3D - Our Reality</option>
+                    <option value="4">4D - Tesseract Space</option>
+                    <option value="5">5D - Probability Space</option>
+                    <option value="11">11D - String Theory Universe</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Travel Distance (Light Years)</label>
+                <input type="number" class="calc-input" id="distance-input" placeholder="Enter distance" value="1">
+            </div>
+            <button class="calc-button" id="calculate-btn">Calculate Dimensional Travel</button>
+            <button class="calc-button" id="find-coordinates">Find My Dimensional Coordinates</button>
+            <div class="calc-result" id="calc-result"></div>
+        </div>
+    </section>
+
+    <footer>
+        <h3>DIMENSION</h3>
+        <p>Exploring the infinite possibilities of reality</p>
+        <p>Created for IT Fest 2025 - DPS Greater Faridabad</p>
+        <div class="social-links">
+            <a href="#" title="Twitter" id="social-twitter">🐦</a>
+            <a href="#" title="GitHub" id="social-github">💻</a>
+            <a href="#" title="LinkedIn" id="social-linkedin">💼</a>
+        </div>
+        <p style="margin-top: 2rem; font-size: 0.9rem;">&copy; 2025 Cyber Crew IT Club. All rights reserved.</p>
+    </footer>
+
+    <div class="modal" id="dimension-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-title" style="color: #667eea; margin-bottom: 1rem;">Dimension Details</h2>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.menu-toggle').click(function() {
+                $('.nav-links').toggleClass('active');
+                $(this).toggleClass('active');
+            });
+
+            $('.nav-links a').click(function() {
+                $('.nav-links').removeClass('active');
+                $('.menu-toggle').removeClass('active');
+            });
+
+            $('a[href^="#"]').click(function(e) {
+                e.preventDefault();
+                var target = $(this).attr('href');
+                $('html, body').animate({
+                    scrollTop: $(target).offset().top - 70
+                }, 800);
+            });
+
+            $(window).scroll(function() {
+                if ($(this).scrollTop() > 50) {
+                    $('nav').addClass('scrolled');
+                } else {
+                    $('nav').removeClass('scrolled');
+                }
+            });
+
+            $('.logo').click(function() {
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 1000);
+            });
+
+            $('.cta-button').click(function() {
+                $('html, body').animate({
+                    scrollTop: $('#dimensions').offset().top - 70
+                }, 1000);
+            });
+
+            const dimensionInfo = {
+                spatial: {
+                    title: 'Spatial Dimension',
+                    content: '<p style="line-height: 1.8; font-size: 1.1rem;"><strong>Welcome to the Spatial Dimension!</strong><br><br>In this realm, you can move through three axes: X (left-right), Y (up-down), and Z (forward-backward). Every object you see occupies space defined by these three coordinates.<br><br><strong>Key Properties:</strong><br>• Volume and surface area<br>• Geometric shapes and structures<br>• Physical movement and navigation<br>• Distance and measurement<br><br><strong>Fun Fact:</strong> A 4D being could see inside a 3D object without opening it, just as we can see inside a 2D square from above!</p>'
+                },
+                temporal: {
+                    title: 'Temporal Dimension',
+                    content: '<p style="line-height: 1.8; font-size: 1.1rem;"><strong>Welcome to the Temporal Dimension!</strong><br><br>Time is the dimension we cannot control, flowing inexorably forward. Unlike spatial dimensions, we can only move in one direction through time.<br><br><strong>Key Properties:</strong><br>• Causality and cause-effect relationships<br>• Entropy and the arrow of time<br>• Memory and prediction<br>• Duration and simultaneity<br><br><strong>Mind-Bending Concept:</strong> Einstein showed that time is relative - it flows differently depending on speed and gravity!</p>'
+                },
+                quantum: {
+                    title: 'Quantum Dimension',
+                    content: '<p style="line-height: 1.8; font-size: 1.1rem;"><strong>Welcome to the Quantum Dimension!</strong><br><br>Here, particles exist in superposition, being everywhere and nowhere until observed. Reality itself becomes probabilistic.<br><br><strong>Quantum Phenomena:</strong><br>• Superposition - multiple states at once<br>• Entanglement - spooky action at a distance<br>• Tunneling - passing through barriers<br>• Wave-particle duality<br><br><strong>Schrödinger\'s Cat:</strong> A thought experiment where a cat is simultaneously alive and dead until observed!</p>'
+                },
+                consciousness: {
+                    title: 'Consciousness Dimension',
+                    content: '<p style="line-height: 1.8; font-size: 1.1rem;"><strong>Welcome to the Consciousness Dimension!</strong><br><br>This is the realm of thought, awareness, and subjective experience. It exists beyond physical space and time.<br><br><strong>Aspects of Consciousness:</strong><br>• Self-awareness and identity<br>• Dreams and imagination<br>• Emotions and feelings<br>• Collective unconscious<br><br><strong>The Hard Problem:</strong> How does physical matter create subjective experience? This remains one of science\'s greatest mysteries!</p>'
+                },
+                higher: {
+                    title: 'Higher Dimensions',
+                    content: '<p style="line-height: 1.8; font-size: 1.1rem;"><strong>Welcome to Higher Dimensions!</strong><br><br>String theory proposes up to 11 dimensions! Most are "compactified" - curled up so small we cannot perceive them.<br><br><strong>Theoretical Dimensions:</strong><br>• 4D: Tesseract (hypercube)<br>• 5D: Probability space<br>• 6D-9D: Calabi-Yau manifolds<br>• 10D-11D: M-theory space<br><br><strong>Visualization:</strong> Imagine a garden hose - from far away it\'s 1D, but up close you see it\'s 2D with a curled-up dimension!</p>'
+                },
+                parallel: {
+                    title: 'Parallel Dimension',
+                    content: '<p style="line-height: 1.8; font-size: 1.1rem;"><strong>Welcome to Parallel Dimensions!</strong><br><br>The Many-Worlds interpretation suggests every quantum decision creates a new universe. Infinite yous exist across infinite realities.<br><br><strong>Types of Parallel Universes:</strong><br>• Level I: Same physics, different initial conditions<br>• Level II: Different physical constants<br>• Level III: Quantum many-worlds<br>• Level IV: Different mathematical structures<br><br><strong>Mind-Blowing:</strong> Right now, in another universe, you made a different choice!</p>'
+                }
+            };
+
+            $('.explore-btn').click(function(e) {
+                e.stopPropagation();
+                const dimension = $(this).closest('.dimension-card').data('dimension');
+                const info = dimensionInfo[dimension];
+                $('#modal-title').text(info.title);
+                $('#modal-body').html(info.content);
+                $('#dimension-modal').fadeIn(300).css('display', 'flex');
+            });
+
+            const universeInfo = {
+                alpha: {
+                    name: 'Universe Alpha - The Mirror World',
+                    description: 'In this universe, everything is reversed. Matter and antimatter exist in perfect balance. Your mirror self lives here, making opposite choices to yours. The laws of physics are inverted, creating a reality that mirrors our own in fascinating ways.'
+                },
+                beta: {
+                    name: 'Universe Beta - The Dream Realm',
+                    description: 'A universe where consciousness shapes reality directly. Thoughts manifest as physical objects. The boundary between imagination and existence dissolves. Here, dreams become tangible and reality flows like water through infinite possibilities.'
+                },
+                gamma: {
+                    name: 'Universe Gamma - The Crystal Cosmos',
+                    description: 'Everything in this universe is crystalline. Matter organizes itself into perfect geometric structures. Time flows in discrete quantum steps rather than continuously. The entire universe resonates with harmonic frequencies of pure energy.'
+                },
+                delta: {
+                    name: 'Universe Delta - The Void Between',
+                    description: 'The space between universes - a realm of pure potential. Here, the laws of physics are still forming. Quantum fluctuations create temporary bubbles of reality. This is where new universes are born from the foam of possibility.'
+                }
+            };
+
+            $('.universe').click(function() {
+                const universe = $(this).data('universe');
+                const info = universeInfo[universe];
+                
+                $(this).animate({
+                    opacity: 0.3
+                }, 200).animate({
+                    opacity: 1
+                }, 200);
+                
+                $('#modal-title').text(info.name);
+                $('#modal-body').html('<p style="line-height: 1.8; font-size: 1.1rem;">' + info.description + '</p>');
+                $('#dimension-modal').fadeIn(300).css('display', 'flex');
+            });
+
+            $('.close-modal, .modal').click(function(e) {
+                if (e.target === this) {
+                    $('#dimension-modal').fadeOut(300);
+                }
+            });
+
+            $('#spatial-slider').on('input', function() {
+                const value = $(this).val();
+                $('#spatial-value').text(value);
+                updateDimensionVisual();
+            });
+
+            $('#time-slider').on('input', function() {
+                const value = $(this).val();
+                $('#time-value').text(value);
+                updateDimensionVisual();
+            });
+
+            $('#quantum-slider').on('input', function() {
+                const value = $(this).val();
+                $('#quantum-value').text(value);
+                updateDimensionVisual();
+            });
+
+            function updateDimensionVisual() {
+                const spatial = $('#spatial-slider').val();
+                const time = $('#time-slider').val();
+                const quantum = $('#quantum-slider').val();
+                
+                const rotation = (spatial / 100) * 360;
+                const scale = 0.5 + (time / 100) * 1;
+                const hue = (quantum / 100) * 360;
+                
+                $('#dimension-visual').css({
+                    'transform': `rotate(${rotation}deg) scale(${scale})`,
+                    'filter': `hue-rotate(${hue}deg)`,
+                    'border-radius': `${50 - (quantum / 2)}%`
+                });
+            }
+
+            $('#reset-lab').click(function() {
+                $('#spatial-slider, #time-slider, #quantum-slider').val(50);
+                $('#spatial-value, #time-value, #quantum-value').text(50);
+                updateDimensionVisual();
+                $(this).text('Reset Complete!');
+                setTimeout(() => {
+                    $(this).text('Reset Dimensions');
+                }, 1000);
+            });
+
+            let portalActive = false;
+            $('#portal-activate, .portal').click(function() {
+                if (portalActive) return;
+                portalActive = true;
+                
+                $('.portal').css({
+                    'transform': 'scale(1.2) rotate(360deg)',
+                    'transition': 'all 1.5s ease',
+                    'box-shadow': '0 0 200px rgba(102, 126, 234, 1)'
+                });
+                
+                $('#portal-activate').text('Portal Activating...');
+                
+                setTimeout(() => {
+                    $('.portal').css({
+                        'transform': 'scale(1) rotate(0deg)',
+                        'box-shadow': '0 0 100px rgba(102, 126, 234, 0.6)'
+                    });
+                    
+                    $('#modal-title').text('Portal Activated!');
+                    $('#modal-body').html('<p style="line-height: 1.8; font-size: 1.1rem;">You have successfully activated the dimensional portal! The gateway is now open, connecting our reality to infinite parallel dimensions.<br><br><strong>Portal Status:</strong> ONLINE<br><strong>Stability:</strong> 99.7%<br><strong>Energy Output:</strong> 1.21 Gigawatts<br><strong>Destination:</strong> Unknown Dimension<br><br>Step through at your own risk. The journey between dimensions is unpredictable, and you may emerge as a completely different version of yourself!</p>');
+                    $('#dimension-modal').fadeIn(300).css('display', 'flex');
+                    
+                    $('#portal-activate').text('Portal Ready');
+                    portalActive = false;
+                }, 1500);
+            });
+
+            $('#calculate-btn').click(function() {
+                const mass = parseFloat($('#mass-input').val()) || 70;
+                const dimension = parseInt($('#dimension-select').val());
+                const distance = parseFloat($('#distance-input').val()) || 1;
+                
+                const energyPerDimension = mass * dimension * 9 * Math.pow(10, 16); // E=mc²-ish
+                const totalEnergy = energyPerDimension * distance;
+                const timeRequired = distance * 365.25 * (4 - dimension) * 24;
+                const risk = Math.min(95, (dimension - 3) * 15 + distance * 5);
+                
+                const result = `
+                    <h3 style="color: #667eea; margin-bottom: 1rem;">Calculation Results</h3>
+                    <p style="line-height: 1.8;"><strong>Energy Required:</strong> ${totalEnergy.toExponential(2)} Joules</p>
+                    <p style="line-height: 1.8;"><strong>Equivalent Power:</strong> ${(totalEnergy / 1000000000).toFixed(2)} Gigawatts</p>
+                    <p style="line-height: 1.8;"><strong>Travel Time:</strong> ${Math.abs(timeRequired).toFixed(2)} hours</p>
+                    <p style="line-height: 1.8;"><strong>Dimension Shift:</strong> ${Math.abs(3 - dimension)} dimensions</p>
+                    <p style="line-height: 1.8;"><strong>Risk Level:</strong> ${risk.toFixed(1)}%</p>
+                    <p style="margin-top: 1rem; color: ${risk > 50 ? '#ff6b6b' : '#51cf66'};">
+                        ${risk > 50 ? '⚠️ High Risk: Extreme caution advised!' : '✅ Acceptable Risk: Journey is feasible'}
+                    </p>
+                `;
+                
+                $('#calc-result').html(result).slideDown(400);
+            });
+
+            $('#find-coordinates').click(function() {
+                const x = (Math.random() * 2000000 - 1000000).toFixed(6);
+                const y = (Math.random() * 2000000 - 1000000).toFixed(6);
+                const z = (Math.random() * 2000000 - 1000000).toFixed(6);
+                const t = Date.now();
+                const quantum = Math.random().toFixed(8);
+                
+                const result = `
+                    <h3 style="color: #667eea; margin-bottom: 1rem;">Your Dimensional Coordinates</h3>
+                    <p style="line-height: 1.8;"><strong>Spatial X:</strong> ${x} Mpc</p>
+                    <p style="line-height: 1.8;"><strong>Spatial Y:</strong> ${y} Mpc</p>
+                    <p style="line-height: 1.8;"><strong>Spatial Z:</strong> ${z} Mpc</p>
+                    <p style="line-height: 1.8;"><strong>Temporal:</strong> ${t} ms (Unix Time)</p>
+                    <p style="line-height: 1.8;"><strong>Quantum State:</strong> |ψ⟩ = ${quantum}</p>
+                    <p style="line-height: 1.8;"><strong>Universe ID:</strong> ${Math.floor(Math.random() * 10000000)}</p>
+                    <p style="margin-top: 1rem; color: #51cf66;">
+                        ✅ Coordinates locked! You exist at this unique point in the multiverse.
+                    </p>
+                `;
+                
+                $('#calc-result').html(result).slideDown(400);
+            });
+
+            const timelineInfo = {
+                beginning: 'The Big Bang created all dimensions simultaneously in a fraction of a second. In that moment, time itself was born, space expanded exponentially, and the fundamental forces separated from their unified state.',
+                unfold: 'As the universe cooled, dimensions crystallized into their current forms. The three spatial dimensions we know emerged distinct and separate, while time became the fourth dimension guiding causality.',
+                present: 'We live in a 3+1 dimensional spacetime. Modern physics suggests additional dimensions exist but are compactified at the Planck scale (10⁻³⁵ meters), far too small to observe directly.',
+                future: 'Future technology might allow us to detect or even access higher dimensions. Imagine navigating through 4D space, seeing all moments of time simultaneously, or traveling to parallel universes!'
+            };
+
+            $('.timeline-dot').click(function() {
+                const era = $(this).data('era');
+                $(this).css({
+                    'transform': 'translateX(-50%) scale(2)',
+                    'box-shadow': '0 0 40px rgba(102, 126, 234, 1)'
+                });
+                
+                setTimeout(() => {
+                    $(this).css({
+                        'transform': 'translateX(-50%) scale(1)',
+                        'box-shadow': '0 0 20px rgba(102, 126, 234, 0.8)'
+                    });
+                }, 300);
+                
+                $('#modal-title').text('Timeline Event');
+                $('#modal-body').html('<p style="line-height: 1.8; font-size: 1.1rem;">' + timelineInfo[era] + '</p>');
+                $('#dimension-modal').fadeIn(300).css('display', 'flex');
+            });
+
+            $('#social-twitter').click(function(e) {
+                e.preventDefault();
+                alert('🐦 Follow us across dimensions! Tweet your interdimensional discoveries using #DimensionTravel');
+            });
+
+            $('#social-github').click(function(e) {
+                e.preventDefault();
+                alert('💻 Fork reality itself! Our dimensional travel code is open-source (in theory).');
+            });
+
+            $('#social-linkedin').click(function(e) {
+                e.preventDefault();
+                alert('💼 Connect professionally across the multiverse! Your parallel self just sent you a connection request.');
+            });
+
+            $(window).scroll(function() {
+                $('.dimension-card').each(function() {
+                    var elementTop = $(this).offset().top;
+                    var viewportBottom = $(window).scrollTop() + $(window).height();
+                    
+                    if (elementTop < viewportBottom - 100) {
+                        $(this).css({
+                            'opacity': '1',
+                            'transform': 'translateY(0)'
+                        });
+                    }
+                });
+            });
+
+            $('.dimension-card').css({
+                'opacity': '0',
+                'transform': 'translateY(50px)',
+                'transition': 'all 0.6s ease'
+            });
+
+            $(window).scroll(function() {
+                $('.timeline-event').each(function(index) {
+                    var elementTop = $(this).offset().top;
+                    var viewportBottom = $(window).scrollTop() + $(window).height();
+                    
+                    if (elementTop < viewportBottom - 100) {
+                        setTimeout(() => {
+                            $(this).css({
+                                'opacity': '1',
+                                'transform': 'translateX(0)'
+                            });
+                        }, index * 200);
+                    }
+                });
+            });
+
+            $('.timeline-event').css({
+                'opacity': '0',
+                'transform': 'translateX(-50px)',
+                'transition': 'all 0.6s ease'
+            });
+
+            $('.timeline-event:nth-child(odd)').css('transform', 'translateX(50px)');
+
+            let lastParticleTime = 0;
+            $(document).mousemove(function(e) {
+                const now = Date.now();
+                if (now - lastParticleTime > 50) {
+                    lastParticleTime = now;
+                    var particle = $('<div class="particle"></div>');
+                    $('body').append(particle);
+                    
+                    particle.css({
+                        'position': 'fixed',
+                        'width': '5px',
+                        'height': '5px',
+                        'background': 'rgba(102, 126, 234, 0.6)',
+                        'border-radius': '50%',
+                        'pointer-events': 'none',
+                        'left': e.pageX + 'px',
+                        'top': e.pageY + 'px',
+                        'animation': 'particleFade 1s ease-out forwards',
+                        'z-index': '9999'
+                    });
+                    
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 1000);
+                }
+            });
+
+            $('<style>')
+                .prop('type', 'text/css')
+                .html(`
+                    @keyframes particleFade {
+                        to {
+                            opacity: 0;
+                            transform: translateY(-50px) scale(0);
+                        }
+                    }
+                `)
+                .appendTo('head');
+        });
+    </script>
+</body>
+</html>
